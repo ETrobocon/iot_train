@@ -54,3 +54,4 @@ dkms.conf
 .theia
 .vscode
 .DS_Store
+build
