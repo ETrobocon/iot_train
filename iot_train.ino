@@ -214,7 +214,7 @@ void doCentral() {
             entry = false;
         }
         if (mabeee = BLE.available()) {
-            if (mabeee.localName().startsWith("MaBeee")) {
+            if (mabeee.localName().startsWith("Scratch")) {
                 result = mabeee.localName();
             }
         }

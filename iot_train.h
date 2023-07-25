@@ -95,43 +95,43 @@ typedef union {
 #define XIAO_VOLT_CHAR_LEN 8                                            // length:voltage characteristic, 8 bytes
 
 // BLE peripheral GATT profile: MaBeee side
-#define MABEEE_CTRL_SERV_UUID "B9F5FF00-D813-46C6-8B61-B453EE2C74D9"    // UUID:MaBeee control service
+#define MABEEE_CTRL_SERV_UUID "7028FF00-0716-4982-A44C-F4961B5FC950"    // UUID:MaBeee control service
 #define MABEEE_CTRL_SERV_TYPE BLEService                                // type:MaBeee control service
-#define MABEEE_1000_CHAR_UUID "B9F51000-D813-46C6-8B61-B453EE2C74D9"    // UUID:unknown 1000 characteristic
+#define MABEEE_1000_CHAR_UUID "70281000-0716-4982-A44C-F4961B5FC950"    // UUID:unknown 1000 characteristic (mabeee_init)
 #define MABEEE_1000_CHAR_PROP (BLERead|BLEWrite)                        // property:unknown 1000 characteristic, readable/writable
 #define MABEEE_1000_CHAR_TYPE BLELongCharacteristic                     // type:unknown 1000 characteristic, unsigned int 32
 #define MABEEE_1000_CHAR_LEN 4                                          // length:unknown 1000 characteristic, 4 bytes
-#define MABEEE_VOLT_CHAR_UUID "B9F51001-D813-46C6-8B61-B453EE2C74D9"    // UUID:voltage characteristic
+#define MABEEE_VOLT_CHAR_UUID "70281001-0716-4982-A44C-F4961B5FC950"    // UUID:voltage characteristic (battery_data)
 #define MABEEE_VOLT_CHAR_PROP (BLEWrite|BLENotify)                      // property:voltage characteristic, writable/notifiable
 #define MABEEE_VOLT_CHAR_TYPE BLEUnsignedCharCharacteristic             // type:voltage characteristic, unsigned char
 #define MABEEE_VOLT_CHAR_LEN 1                                          // length:voltage characteristic, 1 byte
-#define MABEEE_1002_CHAR_UUID "B9F51002-D813-46C6-8B61-B453EE2C74D9"    // UUID:unknown 1002 characteristic
+#define MABEEE_1002_CHAR_UUID "70281002-0716-4982-A44C-F4961B5FC950"    // UUID:unknown 1002 characteristic (over_current)
 #define MABEEE_1002_CHAR_PROP (BLENotify)                               // property:unknown 1002 characteristic, notifiable
 #define MABEEE_1002_CHAR_TYPE BLEUnsignedCharCharacteristic             // type:unknown 1002 characteristic, unsigned char
 #define MABEEE_1002_CHAR_LEN 1                                          // length:unknown 1002 characteristic, 1 byte
-#define MABEEE_3005_CHAR_UUID "B9F53005-D813-46C6-8B61-B453EE2C74D9"    // UUID:unknown 3005 characteristic
+#define MABEEE_3005_CHAR_UUID "70283005-0716-4982-A44C-F4961B5FC950"    // UUID:unknown 3005 characteristic (pwm_period)
 #define MABEEE_3005_CHAR_PROP (BLERead|BLEWrite)                        // property:unknown 3005 characteristic, readable/writable
 #define MABEEE_3005_CHAR_TYPE BLECharacteristic                         // type:unknown 3005 characteristic, byte array
 #define MABEEE_3005_CHAR_LEN 5                                          // length:unknown 3005 characteristic, 5 bytes
-#define MABEEE_PWM_CHAR_UUID "B9F53006-D813-46C6-8B61-B453EE2C74D9"     // UUID:PWM characteristic
+#define MABEEE_PWM_CHAR_UUID "70283006-0716-4982-A44C-F4961B5FC950"     // UUID:PWM characteristic (pwm_duty)
 #define MABEEE_PWM_CHAR_PROP (BLERead|BLEWrite)                         // property:PWM characteristic, readable/writable
 #define MABEEE_PWM_CHAR_TYPE BLECharacteristic                          // type:PWM characteristic, byte array
 #define MABEEE_PWM_CHAR_LEN 5                                           // length:PWM characteristic, 5 bytes
-#define MABEEE_DATA_SERV_UUID "B9F54000-D813-46C6-8B61-B453EE2C74D9"    // UUID:MaBeee data service
+#define MABEEE_DATA_SERV_UUID "70284000-0716-4982-A44C-F4961B5FC950"    // UUID:MaBeee data service
 #define MABEEE_DATA_SERV_TYPE BLEService                                // type:MaBeee data service
-#define MABEEE_NAME_CHAR_UUID "B9F54001-D813-46C6-8B61-B453EE2C74D9"    // UUID:device name characteristic
+#define MABEEE_NAME_CHAR_UUID "70284001-0716-4982-A44C-F4961B5FC950"    // UUID:device name characteristic (local_name)
 #define MABEEE_NAME_CHAR_PROP (BLERead|BLEWrite)                        // property:device name characteristic, readable/writable
 #define MABEEE_NAME_CHAR_TYPE BLECharacteristic                         // type:device name characteristic, byte array(string)
 #define MABEEE_NAME_CHAR_LEN 12                                         // length:device name characteristic, 12 bytes
-#define MABEEE_ID_CHAR_UUID "B9F54002-D813-46C6-8B61-B453EE2C74D9"      // UUID:device ID characteristic
+#define MABEEE_ID_CHAR_UUID "70284002-0716-4982-A44C-F4961B5FC950"      // UUID:device ID characteristic (device_id)
 #define MABEEE_ID_CHAR_PROP (BLERead)                                   // property:device ID characteristic, readable
 #define MABEEE_ID_CHAR_TYPE BLECharacteristic                           // type:device ID characteristic, byte array(uusigned int 64)
 #define MABEEE_ID_CHAR_LEN 8                                            // length:device ID characteristic, 8 bytes
-#define MABEEE_VER_CHAR_UUID "B9F54003-D813-46C6-8B61-B453EE2C74D9"     // UUID:firmware version characteristic
+#define MABEEE_VER_CHAR_UUID "70284003-0716-4982-A44C-F4961B5FC950"     // UUID:firmware version characteristic (version)
 #define MABEEE_VER_CHAR_PROP (BLERead)                                  // property:firmware version characteristic, readable
 #define MABEEE_VER_CHAR_TYPE BLECharacteristic                          // type:firmware version characteristic, byte array(2 * unsigned int 16)
 #define MABEEE_VER_CHAR_LEN 4                                           // length:firmware version characteristic, 4 bytes
-#define MABEEE_4004_CHAR_UUID "B9F54004-D813-46C6-8B61-B453EE2C74D9"    // UUID:unknown 4004 characteristic
+#define MABEEE_4004_CHAR_UUID "70284004-0716-4982-A44C-F4961B5FC950"    // UUID:unknown 4004 characteristic (dfu_control)
 #define MABEEE_4004_CHAR_PROP (BLEWrite)                                // property:unknown 4004 characteristic, writable
 #define MABEEE_4004_CHAR_TYPE BLECharacteristic                         // type:unknown 4004 characteristic, byte array
 #define MABEEE_4004_CHAR_LEN 1                                          // length:unknown 4004 characteristic, 1 byte
