@@ -560,5 +560,8 @@ void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
 void onPwmWritten(BLEDevice central, BLECharacteristic characteristic) {
     Serial.println("Debug: onPwmWritten");
     pwmPacket pwm;
-    memcpy(pwm.byteArray, characteristic.value(), sizeof(pwm.byteArray));
+    bzero(pwm.byteArray, sizeof(pwm.byteArray));
+    pwm.byteArray[0] = 0x01;
+    pwm.byteArray[1] = characteristic.value()[0];
+    mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
 }
