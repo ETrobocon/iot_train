@@ -314,7 +314,9 @@ void doCentral() {
 void doNotify(){
     static uint16_t counter[] = {0, 0, 0, 0};
     for (int idx=0; idx<4; idx++) {
+        if (counter[idx] >= 10) {
         counter[idx] -= 10;
+        }
         if (counter[idx] <= 0) {
             switch (idx) {
               case 0: {
