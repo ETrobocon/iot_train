@@ -429,10 +429,19 @@ void updatePwm() {
 
 void updateVolt() {
     // ToDo: move to MaBeee class?
+    if (!mabeeeVoltCharacteristic.subscribed()) {
+      mabeeeVoltCharacteristic.subscribe();
+    }
+    if (mabeeeVoltCharacteristic.valueUpdated()) {
+      unsigned char value = 0;
+      mabeeeVoltCharacteristic.readValue(value);
     float1Packet volt;
     volt.timestamp = millis();
-    volt.float1 = 0.0F;
+      volt.float1 = 1.4*value/100.0F;
     voltCharacteristic.writeValue(volt.byteArray, sizeof(volt.byteArray));
+    } else {
+      mabeeeVoltCharacteristic.writeValue((byte)0x00);
+    }
 }
 
 void setAccelPeriod(uint16_t period) {
