@@ -10,6 +10,7 @@
  *              See LICENSE.
  */
 
+#include <math.h>
 #include "iot_train.h"   // IoT Train definitions
 #include "Preferences.h" // Preferences on onboard flash memory
 
@@ -58,6 +59,7 @@ void updateVolt();
 BLEDevice mabeee;   // MaBeee BLE device
 String mabeeeName;  // device name of MaBeee
 String mabeeeAddress;   // BLE address of MaBeee
+float1Packet mabeeeVolt;   // notified battery voltage packet
 BLEService mabeeeCtrlService;           // GATT: control service
 BLECharacteristic mabeeePwmCharacteristic;    // GATT: PWM characteristic
 BLECharacteristic mabeeeVoltCharacteristic;   // GATT: voltage characteristic
@@ -138,6 +140,8 @@ void setup() {
     updateTemp();
     updateLed();
     updatePwm();
+    mabeeeVolt.timestamp = 0;
+    mabeeeVolt.float1 = 0.0F;
     updateVolt();
 
     // device ready
@@ -282,6 +286,7 @@ void doCentral() {
             // get characteristics
             mabeeePwmCharacteristic = mabeeeCtrlService.characteristic(MABEEE_PWM_CHAR_UUID);
             mabeeeVoltCharacteristic = mabeeeCtrlService.characteristic(MABEEE_VOLT_CHAR_UUID);
+            mabeeeVoltCharacteristic.subscribe();
             mabeeeNameCharacteristic = mabeeeDataService.characteristic(MABEEE_NAME_CHAR_UUID);
             mabeeeIdCharacteristic = mabeeeDataService.characteristic(MABEEE_ID_CHAR_UUID);
             mabeeeVersionCharacteristic = mabeeeDataService.characteristic(MABEEE_VER_CHAR_UUID);
@@ -298,10 +303,23 @@ void doCentral() {
                 Serial.println("Central: Failed to prepare services.");
                 stateCentral = C_SCANNING;
                 entry = true;
+            } else {
+                led.setB();
+                mabeeeVoltCharacteristic.writeValue((uint8_t)0);
             }
         }
         if (mabeee.connect()) {
-            led.setB();
+            if (mabeeeVoltCharacteristic.valueUpdated()) {
+                uint8_t rawValue;
+                mabeeeVoltCharacteristic.readValue(rawValue);
+                Serial.print("v");
+                if (rawValue) {
+                    Serial.print(rawValue);
+                    mabeeeVolt.timestamp = millis();
+                    mabeeeVolt.float1 = rawValue * sqrt(2) / 100.0;
+                    mabeeeVoltCharacteristic.writeValue((uint8_t)0);
+                }
+            }
         } else {
             Serial.println("Central: Disconnected.");
             stateCentral = C_SCANNING;
@@ -312,24 +330,28 @@ void doCentral() {
 }
 
 void doNotify(){
-    static uint16_t counter[] = {0, 0, 0, 0};
+    static int16_t counter[] = {0, 0, 0, 0};
     for (int idx=0; idx<4; idx++) {
         counter[idx] -= 10;
         if (counter[idx] <= 0) {
             switch (idx) {
               case 0: {
+                //Serial.print("a");
                 updateAccel();
                 counter[0] = getAccelPeriod();
               } break;
               case 1: {
+                //Serial.print("g");
                 updateGyro();
                 counter[1] = getGyroPeriod();
               } break;
               case 2: {
+                //Serial.print("t");
                 updateTemp();
                 counter[2] = getTempPeriod();
               } break;
               case 3: {
+                //Serial.println("v");
                 updateVolt();
                 counter[3] = getVoltPeriod();
               } break;
@@ -422,17 +444,12 @@ void updateLed() {
 }
 
 void updatePwm() {
-    // ToDo: move to MaBeee class?
     unsigned char pwm = 0;
     pwmCharacteristic.writeValue(pwm);
 }
 
 void updateVolt() {
-    // ToDo: move to MaBeee class?
-    float1Packet volt;
-    volt.timestamp = millis();
-    volt.float1 = 0.0F;
-    voltCharacteristic.writeValue(volt.byteArray, sizeof(volt.byteArray));
+    voltCharacteristic.writeValue(mabeeeVolt.byteArray, sizeof(mabeeeVolt.byteArray));
 }
 
 void setAccelPeriod(uint16_t period) {
