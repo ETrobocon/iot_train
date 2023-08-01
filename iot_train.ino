@@ -305,20 +305,32 @@ void doCentral() {
                 entry = true;
             } else {
                 led.setB();
-                mabeeeVoltCharacteristic.writeValue((uint8_t)0);
             }
         }
         if (mabeee.connect()) {
+            static uint8_t responseBuffer[256];
+            static uint8_t responseLength = 0;
+            static uint8_t voltRawValue = 0;
+            static uint8_t voltRawValue_previous = 0;
+            static uint16_t voltCount = 0;
+            mabeee.poll();
             if (mabeeeVoltCharacteristic.valueUpdated()) {
-                uint8_t rawValue;
-                mabeeeVoltCharacteristic.readValue(rawValue);
-                Serial.print("v");
-                if (rawValue) {
-                    Serial.print(rawValue);
-                    mabeeeVolt.timestamp = millis();
-                    mabeeeVolt.float1 = rawValue * sqrt(2) / 100.0;
-                    mabeeeVoltCharacteristic.writeValue((uint8_t)0);
+                responseLength = mabeeeVoltCharacteristic.readValue(responseBuffer, sizeof(responseBuffer));
+                if (responseLength) {
+                    voltRawValue = responseBuffer[0];
+                    if (voltRawValue && voltRawValue != voltRawValue_previous) {
+                        mabeeeVolt.timestamp = millis();
+                        mabeeeVolt.float1 = voltRawValue * sqrt(2) / 100.0;
+                        Serial.println();
+                        Serial.print(mabeeeVolt.float1);
+                    }
+                    voltRawValue_previous = voltRawValue;
                 }
+            }
+            if (++voltCount > 100) {
+                mabeeeVoltCharacteristic.writeValue((uint8_t)0);
+                mabeee.poll();
+                voltCount = 0;
             }
         } else {
             Serial.println("Central: Disconnected.");
