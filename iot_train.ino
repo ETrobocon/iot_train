@@ -2,13 +2,16 @@
  * @brief   IoT Train with MaBeee firmware for Seeed XIAO nRF52840 BLE Sense
  * @file        iot_train.ino
  * @author  TANAHASHI, Jiro (aka jtFuruhata) <jt@do-johodai.ac.jp>
- * @version 0.0.1
- * @date    2023-03-06
+ * @version 0.0.2
+ * @date    2023-08-08
  * 
  * @copyright   Copyright (c) 2023 jtLab, Hokkaido Information University,
  *              Release under the MIT License.
  *              See LICENSE.
  */
+
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 2
 
 #include <math.h>
 #include "iot_train.h"   // IoT Train definitions
@@ -570,6 +573,14 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
           case CMD_XIAO_SCAN_MABEEE:
           case CMD_XIAO_CONNECT_AUTO: {
             commandResponse.response = CMD_RESP_EXECUTING;
+          } break;
+
+          case CMD_XIAO_GET_VER: {
+            versionPacket ver;
+            ver.major = VERSION_MAJOR;
+            ver.minor = VERSION_MINOR;
+            memcpy(commandResponse.payload, ver.byteArray, sizeof(ver.byteArray));
+            commandResponse.response = CMD_RESP_OK;
           } break;
         }
     } else if (commandRequest.command == CMD_CANCEL) {

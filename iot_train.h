@@ -147,7 +147,7 @@ typedef union {
 #define CMD_TRAIN_GET_LED       6 // get LED color. payload = none, return = color:unsigned char(LED::COLOR)
 #define CMD_MABEEE_GET_NAME    11 // get device name. payload = none, return = name:unsigned char(string)
 #define CMD_MABEEE_GET_ID      12 // get device ID. payload = none, return = ID:unsigned int 64
-#define CMD_MABEEE_GET_VER     13 // get firmware version. payload = none, return = version:versionPacket
+#define CMD_MABEEE_GET_VER     13 // get firmware version of MaBeee. payload = none, return = version:versionPacket
 #define CMD_MABEEE_GET_BDADDR  14 // get MaBeee's bluetooth address. payload = none, return = address:unsigned char(string)
 #define CMD_MABEEE_GET_RSSI    15 // get bluetooth RSSI from MaBeee to XIAO. payload = none, return = RSSI:signed char
 #define CMD_XIAO_GET_STATE     21 // get connection status with MaBeee. payload = none, return = state:unsigned char(STATE_CENTRAL)
@@ -156,6 +156,7 @@ typedef union {
 #define CMD_XIAO_SCAN_MABEEE   24 // scan until the first MaBeee is found. payload = none, return = name:unsigned char(string)
 #define CMD_XIAO_CONNECT_AUTO  25 // connect to the first MaBeee found. payload = none, return = none
 #define CMD_XIAO_ALLOW_HOST    26 // register currently connected host (central) as allowed one. payload = none, return = none
+#define CMD_XIAO_GET_VER       27 // get firmware version of this system. payload = none, return = version:versionPacket
 #define CMD_SET_PERIOD_ACCEL   31 // set notification period of accelerometer. payload = period:unsigned int 16(0=do not notify), return = none
 #define CMD_GET_PERIOD_ACCEL   32 // get notification period of accelerometer. payload = none, return = period:unsigned int 16
 #define CMD_SET_PERIOD_GYRO    33 // set notification period of gyroscope. payload = period:unsigned int 16(0=do not notify), return = none
