@@ -46,6 +46,13 @@ BLECharacteristic tempCharacteristic(XIAO_TEMP_CHAR_UUID, XIAO_TEMP_CHAR_PROP, X
 BLECharacteristic ledCharacteristic(XIAO_LED_CHAR_UUID, XIAO_LED_CHAR_PROP, XIAO_LED_CHAR_LEN);                 // GATT: LED characteristic
 BLECharacteristic pwmCharacteristic(XIAO_PWM_CHAR_UUID, XIAO_PWM_CHAR_PROP, XIAO_PWM_CHAR_LEN);                 // GATT: PWM characteristic
 BLECharacteristic voltCharacteristic(XIAO_VOLT_CHAR_UUID, XIAO_VOLT_CHAR_PROP, XIAO_VOLT_CHAR_LEN);             // GATT: voltage characteristic
+BLEDescriptor commandDescriptor("2901", XIAO_COMMAND_CHAR_NAME);
+BLEDescriptor accelDescriptor("2901", XIAO_ACCEL_CHAR_NAME);
+BLEDescriptor gyroDescriptor("2901", XIAO_GYRO_CHAR_NAME);
+BLEDescriptor tempDescriptor("2901", XIAO_TEMP_CHAR_NAME);
+BLEDescriptor ledDescriptor("2901", XIAO_LED_CHAR_NAME);
+BLEDescriptor pwmDescriptor("2901", XIAO_PWM_CHAR_NAME);
+BLEDescriptor voltDescriptor("2901", XIAO_VOLT_CHAR_NAME);
 
 // handler for writable characteristics
 void onCommandWritten(BLEDevice, BLECharacteristic);
@@ -128,6 +135,13 @@ void setup() {
     commandCharacteristic.setEventHandler(BLEWritten, onCommandWritten);
     ledCharacteristic.setEventHandler(BLEWritten, onLedWritten);
     pwmCharacteristic.setEventHandler(BLEWritten, onPwmWritten);
+    commandCharacteristic.addDescriptor(commandDescriptor);
+    accelCharacteristic.addDescriptor(accelDescriptor);
+    gyroCharacteristic.addDescriptor(gyroDescriptor);
+    tempCharacteristic.addDescriptor(tempDescriptor);
+    ledCharacteristic.addDescriptor(ledDescriptor);
+    pwmCharacteristic.addDescriptor(pwmDescriptor);
+    voltCharacteristic.addDescriptor(voltDescriptor);
     xiaoService.addCharacteristic(commandCharacteristic);
     xiaoService.addCharacteristic(accelCharacteristic);
     xiaoService.addCharacteristic(gyroCharacteristic);

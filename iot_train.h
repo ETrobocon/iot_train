@@ -69,30 +69,37 @@ typedef union {
 #define XIAO_COMMAND_CHAR_PROP (BLEWrite|BLENotify)                     // property:command characteristic, writable/notifiable
 #define XIAO_COMMAND_CHAR_TYPE BLECharacteristic                        // type:command characteristic, byte array
 #define XIAO_COMMAND_CHAR_LEN 21                                        // length:command characteristic, 21 bytes
+#define XIAO_COMMAND_CHAR_NAME "command"                                // user descriptor: "command"
 #define XIAO_ACCEL_CHAR_UUID "AD0C1002-64E9-48B0-9088-6F9E9FE4972E"     // UUID:accelerometer characteristic
 #define XIAO_ACCEL_CHAR_PROP (BLERead|BLENotify)                        // property:accelerometer characteristic, readable/notifiable
 #define XIAO_ACCEL_CHAR_TYPE BLECharacteristic                          // type:accelerometer characteristic, byte array
 #define XIAO_ACCEL_CHAR_LEN 16                                          // length:accelerometer characteristic, 16 bytes
+#define XIAO_ACCEL_CHAR_NAME "accelerometer"                            // user descriptor: "accelerometer"
 #define XIAO_GYRO_CHAR_UUID "AD0C1003-64E9-48B0-9088-6F9E9FE4972E"      // UUID:gyroscope characteristic
 #define XIAO_GYRO_CHAR_PROP (BLERead|BLENotify)                         // property:gyroscope characteristic, readable/notifiable
 #define XIAO_GYRO_CHAR_TYPE BLECharacteristic                           // type:gyroscope characteristic, byte array
 #define XIAO_GYRO_CHAR_LEN 16                                           // length:gyroscope characteristic, 16 bytes
+#define XIAO_GYRO_CHAR_NAME "gyroscope"                                 // user descriptor: "gyroscope"
 #define XIAO_TEMP_CHAR_UUID "AD0C1004-64E9-48B0-9088-6F9E9FE4972E"      // UUID:temperature characteristic
 #define XIAO_TEMP_CHAR_PROP (BLERead|BLENotify)                         // property:temperature characteristic, readable/notifiable
 #define XIAO_TEMP_CHAR_TYPE BLECharacteristic                           // type:temperature characteristic, byte array
 #define XIAO_TEMP_CHAR_LEN 8                                            // length:temperature characteristic, 8 bytes
+#define XIAO_TEMP_CHAR_NAME "temperature"                               // user descriptor: "temperature"
 #define XIAO_LED_CHAR_UUID "AD0C1005-64E9-48B0-9088-6F9E9FE4972E"       // UUID:LED characteristic
 #define XIAO_LED_CHAR_PROP (BLERead|BLEWrite)                           // property:LED characteristic, readable/writable
 #define XIAO_LED_CHAR_TYPE BLEUnsignedCharCharacteristic                // type:LED characteristic, unsigned char
 #define XIAO_LED_CHAR_LEN 1                                             // length:LED characteristic, 1 byte
+#define XIAO_LED_CHAR_NAME "led"                                        // user descriptor: "led"
 #define XIAO_PWM_CHAR_UUID "AD0C2001-64E9-48B0-9088-6F9E9FE4972E"       // UUID:PWM characteristic
 #define XIAO_PWM_CHAR_PROP (BLERead|BLEWrite)                           // property:PWM characteristic, readable/writable
 #define XIAO_PWM_CHAR_TYPE BLEUnsignedCharCharacteristic                // type:PWM characteristic, unsigned char
 #define XIAO_PWM_CHAR_LEN 1                                             // length:PWM characteristic, 1 byte
+#define XIAO_PWM_CHAR_NAME "pwm_duty"                                   // user descriptor: "pwm_duty"
 #define XIAO_VOLT_CHAR_UUID "AD0C2002-64E9-48B0-9088-6F9E9FE4972E"      // UUID:voltage characteristic 
 #define XIAO_VOLT_CHAR_PROP (BLERead|BLENotify)                         // property:voltage characteristic, readable/notifiable
 #define XIAO_VOLT_CHAR_TYPE BLECharacteristic                           // type:voltage characteristic, byte array
 #define XIAO_VOLT_CHAR_LEN 8                                            // length:voltage characteristic, 8 bytes
+#define XIAO_VOLT_CHAR_NAME "battery_data"                              // user descriptor: "battery_data"
 
 // BLE peripheral GATT profile: MaBeee side
 #define MABEEE_CTRL_SERV_UUID "B9F5FF00-D813-46C6-8B61-B453EE2C74D9"    // UUID:MaBeee control service
