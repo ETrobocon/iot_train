@@ -46,6 +46,7 @@ BLECharacteristic tempCharacteristic(XIAO_TEMP_CHAR_UUID, XIAO_TEMP_CHAR_PROP, X
 BLECharacteristic ledCharacteristic(XIAO_LED_CHAR_UUID, XIAO_LED_CHAR_PROP, XIAO_LED_CHAR_LEN);                 // GATT: LED characteristic
 BLECharacteristic pwmCharacteristic(XIAO_PWM_CHAR_UUID, XIAO_PWM_CHAR_PROP, XIAO_PWM_CHAR_LEN);                 // GATT: PWM characteristic
 BLECharacteristic voltCharacteristic(XIAO_VOLT_CHAR_UUID, XIAO_VOLT_CHAR_PROP, XIAO_VOLT_CHAR_LEN);             // GATT: voltage characteristic
+BLECharacteristic verCharacteristic(XIAO_VER_CHAR_UUID, XIAO_VER_CHAR_PROP, XIAO_VER_CHAR_LEN);                 // GATT: firmware version characteristic
 
 // handler for writable characteristics
 void onCommandWritten(BLEDevice, BLECharacteristic);
@@ -135,6 +136,7 @@ void setup() {
     xiaoService.addCharacteristic(ledCharacteristic);
     xiaoService.addCharacteristic(pwmCharacteristic);
     xiaoService.addCharacteristic(voltCharacteristic);
+    xiaoService.addCharacteristic(verCharacteristic);
     BLE.addService(xiaoService);
 
     // update values
@@ -146,6 +148,7 @@ void setup() {
     mabeeeVolt.timestamp = 0;
     mabeeeVolt.float1 = 0.0F;
     updateVolt();
+    updateVer();
 
     // device ready
     led.resetB();
@@ -465,6 +468,13 @@ void updatePwm() {
 
 void updateVolt() {
     voltCharacteristic.writeValue(mabeeeVolt.byteArray, sizeof(mabeeeVolt.byteArray));
+}
+
+void updateVer() {
+    versionPacket ver;
+    ver.major = VERSION_MAJOR;
+    ver.minor = VERSION_MINOR;
+    verCharacteristic.writeValue(ver.byteArray, sizeof(ver.byteArray));
 }
 
 void setAccelPeriod(uint16_t period) {
