@@ -544,10 +544,20 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
 
           case CMD_MABEEE_GET_NAME:
           case CMD_MABEEE_GET_ID:
-          case CMD_MABEEE_GET_VER:
           case CMD_MABEEE_GET_BDADDR:
           case CMD_MABEEE_GET_RSSI: {
             commandResponse.response = CMD_RESP_EXECUTING;
+          } break;
+
+          case CMD_MABEEE_GET_VER: {
+            versionPacket ver;
+            mabeeeVersionCharacteristic.readValue(ver.byteArray, sizeof(ver.byteArray));
+            // Serial.print("MaBeee version: firmware ");
+            // Serial.print(ver.major);
+            // Serial.print(" hardware ");
+            // Serial.println(ver.minor);
+            memcpy(commandResponse.payload, ver.byteArray, sizeof(ver.byteArray));
+            commandResponse.response = CMD_RESP_OK;
           } break;
 
           case CMD_XIAO_GET_STATE: {
