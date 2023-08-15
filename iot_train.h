@@ -97,6 +97,10 @@ typedef union {
 #define XIAO_VER_CHAR_PROP (BLERead|BLENotify)                          // property:firmware version characteristic, readable/notifiable
 #define XIAO_VER_CHAR_TYPE BLECharacteristic                            // type:firmware version characteristic, byte array
 #define XIAO_VER_CHAR_LEN 4                                             // length:firmware version characteristic, 4 bytes
+#define XIAO_MABEEENAME_CHAR_UUID "AD0C2004-64E9-48B0-9088-6F9E9FE4972E"// UUID:device name characteristic 
+#define XIAO_MABEEENAME_CHAR_PROP (BLERead|BLENotify)                   // property:MaBeee device name characteristic, readable/notifiable
+#define XIAO_MABEEENAME_CHAR_TYPE BLECharacteristic                     // type:MaBeee device name characteristic, byte array
+#define XIAO_MABEEENAME_CHAR_LEN 12                                     // length:MaBeee device name characteristic, 12 bytes
 
 // BLE peripheral GATT profile: MaBeee side
 #define MABEEE_CTRL_SERV_UUID "B9F5FF00-D813-46C6-8B61-B453EE2C74D9"    // UUID:MaBeee control service
@@ -253,6 +257,10 @@ void updateVolt();
  */
 void updateVer();
 
+/**
+ * @brief update MaBeee device name value
+ */
+void updateMaBeeeName();
 
 /**
  * @brief Set the Accel Period

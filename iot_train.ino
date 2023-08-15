@@ -47,6 +47,8 @@ BLECharacteristic ledCharacteristic(XIAO_LED_CHAR_UUID, XIAO_LED_CHAR_PROP, XIAO
 BLECharacteristic pwmCharacteristic(XIAO_PWM_CHAR_UUID, XIAO_PWM_CHAR_PROP, XIAO_PWM_CHAR_LEN);                 // GATT: PWM characteristic
 BLECharacteristic voltCharacteristic(XIAO_VOLT_CHAR_UUID, XIAO_VOLT_CHAR_PROP, XIAO_VOLT_CHAR_LEN);             // GATT: voltage characteristic
 BLECharacteristic verCharacteristic(XIAO_VER_CHAR_UUID, XIAO_VER_CHAR_PROP, XIAO_VER_CHAR_LEN);                 // GATT: firmware version characteristic
+BLECharacteristic maNameCharacteristic(XIAO_MABEEENAME_CHAR_UUID, XIAO_MABEEENAME_CHAR_PROP, XIAO_MABEEENAME_CHAR_LEN); // GATT: device name characteristic
+
 
 // handler for writable characteristics
 void onCommandWritten(BLEDevice, BLECharacteristic);
@@ -58,6 +60,8 @@ void updateAccel();
 void updateGyro();
 void updateTemp();
 void updateVolt();
+void updateVer();
+void updateMaBeeeName();
 
 // MaBeee BLE device properties and GATT profile:
 BLEDevice mabeee;   // MaBeee BLE device
@@ -137,6 +141,7 @@ void setup() {
     xiaoService.addCharacteristic(pwmCharacteristic);
     xiaoService.addCharacteristic(voltCharacteristic);
     xiaoService.addCharacteristic(verCharacteristic);
+    xiaoService.addCharacteristic(maNameCharacteristic);
     BLE.addService(xiaoService);
 
     // update values
@@ -264,6 +269,7 @@ void doCentral() {
             Serial.println("Central: Connected.");
             stateCentral = C_CONNECTED;
             entry = true;
+            updateMaBeeeName();
         } else {
             counter--;
             if (!counter) {
@@ -342,6 +348,7 @@ void doCentral() {
             Serial.println("Central: Disconnected.");
             stateCentral = C_SCANNING;
             entry = true;
+            updateMaBeeeName();
         }
       } break;
     }
@@ -475,6 +482,11 @@ void updateVer() {
     ver.major = VERSION_MAJOR;
     ver.minor = VERSION_MINOR;
     verCharacteristic.writeValue(ver.byteArray, sizeof(ver.byteArray));
+}
+
+void updateMaBeeeName() {
+    String MaBeee = mabeee.localName();
+    maNameCharacteristic.writeValue(MaBeee.c_str(), MaBeee.length());
 }
 
 void setAccelPeriod(uint16_t period) {
