@@ -542,12 +542,30 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
             commandResponse.response = CMD_RESP_OK;
           } break;
 
-          case CMD_MABEEE_GET_NAME:
           case CMD_MABEEE_GET_ID:
-          case CMD_MABEEE_GET_VER:
           case CMD_MABEEE_GET_BDADDR:
           case CMD_MABEEE_GET_RSSI: {
             commandResponse.response = CMD_RESP_EXECUTING;
+          } break;
+
+          case CMD_MABEEE_GET_NAME: {
+            String MaBeee = mabeee.localName();
+            // Serial.print("MaBeee name: ");
+            // Serial.println(MaBeee);
+            bzero(commandResponse.payload, sizeof(commandResponse.payload));
+            memcpy(commandResponse.payload, MaBeee.c_str(), MaBeee.length());
+            commandResponse.response = CMD_RESP_OK;
+          } break;
+
+          case CMD_MABEEE_GET_VER: {
+            versionPacket ver;
+            mabeeeVersionCharacteristic.readValue(ver.byteArray, sizeof(ver.byteArray));
+            // Serial.print("MaBeee version: firmware ");
+            // Serial.print(ver.major);
+            // Serial.print(", hardware ");
+            // Serial.println(ver.minor);
+            memcpy(commandResponse.payload, ver.byteArray, sizeof(ver.byteArray));
+            commandResponse.response = CMD_RESP_OK;
           } break;
 
           case CMD_XIAO_GET_STATE: {
@@ -590,6 +608,7 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
         Serial.println("Command: error: command dispatcher is busy.");
         commandResponse.response = CMD_RESP_BUSY;
     }
+    commandCharacteristic.writeValue(commandResponse.byteArray, sizeof(commandResponse.byteArray));
 }
 
 void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
