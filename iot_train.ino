@@ -590,6 +590,7 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
         Serial.println("Command: error: command dispatcher is busy.");
         commandResponse.response = CMD_RESP_BUSY;
     }
+    commandCharacteristic.writeValue(commandResponse.byteArray, sizeof(commandResponse.byteArray));
 }
 
 void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
