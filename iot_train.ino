@@ -11,7 +11,7 @@
  */
 
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 2
+#define VERSION_MINOR 3
 
 #include <math.h>
 #include "iot_train.h"   // IoT Train definitions
