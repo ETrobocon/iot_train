@@ -11,7 +11,7 @@
  */
 
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 2
+#define VERSION_MINOR 3
 
 #include <math.h>
 #include "iot_train.h"   // IoT Train definitions
@@ -46,6 +46,9 @@ BLECharacteristic tempCharacteristic(XIAO_TEMP_CHAR_UUID, XIAO_TEMP_CHAR_PROP, X
 BLECharacteristic ledCharacteristic(XIAO_LED_CHAR_UUID, XIAO_LED_CHAR_PROP, XIAO_LED_CHAR_LEN);                 // GATT: LED characteristic
 BLECharacteristic pwmCharacteristic(XIAO_PWM_CHAR_UUID, XIAO_PWM_CHAR_PROP, XIAO_PWM_CHAR_LEN);                 // GATT: PWM characteristic
 BLECharacteristic voltCharacteristic(XIAO_VOLT_CHAR_UUID, XIAO_VOLT_CHAR_PROP, XIAO_VOLT_CHAR_LEN);             // GATT: voltage characteristic
+BLECharacteristic verCharacteristic(XIAO_VER_CHAR_UUID, XIAO_VER_CHAR_PROP, XIAO_VER_CHAR_LEN);                 // GATT: firmware version characteristic
+BLECharacteristic maNameCharacteristic(XIAO_MABEEENAME_CHAR_UUID, XIAO_MABEEENAME_CHAR_PROP, XIAO_MABEEENAME_CHAR_LEN); // GATT: device name characteristic
+
 
 // handler for writable characteristics
 void onCommandWritten(BLEDevice, BLECharacteristic);
@@ -57,6 +60,8 @@ void updateAccel();
 void updateGyro();
 void updateTemp();
 void updateVolt();
+void updateVer();
+void updateMaBeeeName();
 
 // MaBeee BLE device properties and GATT profile:
 BLEDevice mabeee;   // MaBeee BLE device
@@ -135,6 +140,8 @@ void setup() {
     xiaoService.addCharacteristic(ledCharacteristic);
     xiaoService.addCharacteristic(pwmCharacteristic);
     xiaoService.addCharacteristic(voltCharacteristic);
+    xiaoService.addCharacteristic(verCharacteristic);
+    xiaoService.addCharacteristic(maNameCharacteristic);
     BLE.addService(xiaoService);
 
     // update values
@@ -146,6 +153,7 @@ void setup() {
     mabeeeVolt.timestamp = 0;
     mabeeeVolt.float1 = 0.0F;
     updateVolt();
+    updateVer();
 
     // device ready
     led.resetB();
@@ -261,6 +269,7 @@ void doCentral() {
             Serial.println("Central: Connected.");
             stateCentral = C_CONNECTED;
             entry = true;
+            updateMaBeeeName();
         } else {
             counter--;
             if (!counter) {
@@ -339,6 +348,7 @@ void doCentral() {
             Serial.println("Central: Disconnected.");
             stateCentral = C_SCANNING;
             entry = true;
+            updateMaBeeeName();
         }
       } break;
     }
@@ -465,6 +475,18 @@ void updatePwm() {
 
 void updateVolt() {
     voltCharacteristic.writeValue(mabeeeVolt.byteArray, sizeof(mabeeeVolt.byteArray));
+}
+
+void updateVer() {
+    versionPacket ver;
+    ver.major = VERSION_MAJOR;
+    ver.minor = VERSION_MINOR;
+    verCharacteristic.writeValue(ver.byteArray, sizeof(ver.byteArray));
+}
+
+void updateMaBeeeName() {
+    String MaBeee = mabeee.localName();
+    maNameCharacteristic.writeValue(MaBeee.c_str(), MaBeee.length());
 }
 
 void setAccelPeriod(uint16_t period) {
