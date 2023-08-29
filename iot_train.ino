@@ -238,7 +238,7 @@ void doCentral() {
             Serial.print("Central: Found ");
             Serial.print(result);
             if (isPairedMaBeee(result)
-              || connectFirstMaBeee) {
+              || !hasPairedMaBeee()) {
                 Serial.println(" which is the target device.");
                 BLE.stopScan();
                 stateCentral = C_CONNECTING;
