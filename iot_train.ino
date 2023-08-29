@@ -207,6 +207,7 @@ void doPeripheral() {
             Serial.println("Peripheral: Disconnected.");
             statePeripheral = P_ADVERTISING;
             entry = true;
+            NVIC_SystemReset();
         }
       } break;
     }
@@ -315,6 +316,7 @@ void doCentral() {
                 Serial.println("Central: Failed to prepare services.");
                 stateCentral = C_SCANNING;
                 entry = true;
+                NVIC_SystemReset();
             } else {
                 led.setB();
             }
@@ -349,6 +351,7 @@ void doCentral() {
             stateCentral = C_SCANNING;
             entry = true;
             updateMaBeeeName();
+            NVIC_SystemReset();
         }
       } break;
     }
