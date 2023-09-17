@@ -578,12 +578,19 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
           case CMD_XIAO_GET_STATE: {
             commandResponse.payload[0] = (unsigned char)stateCentral;
             commandResponse.response = CMD_RESP_OK;
+            Serial.print("GET STATE: ");
+            Serial.println(stateCentral);
           } break;
           
           case CMD_XIAO_SET_MABEEE: {
             connectFirstMaBeee = false;
             if (setPairedMaBeeeName(String((char *)commandRequest.payload))) {
                 commandResponse.response = CMD_RESP_OK;
+                Serial.print("SET MABEEE: '");
+                Serial.print(String((char *) commandRequest.payload));
+                Serial.print("' (");
+                Serial.print(String((char *) commandRequest.payload).length());
+                Serial.println(")");
             } else {
                 Serial.println("Command: error: failed to write file.");
                 commandResponse.response = CMD_RESP_ERROR;
@@ -593,6 +600,11 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
           case CMD_XIAO_GET_MABEEE: {
             memcpy(commandResponse.payload, pairedMaBeeeName.c_str(), pairedMaBeeeName.length());
             commandResponse.response = CMD_RESP_OK;
+            Serial.print("GET MABEEE: '");
+            Serial.print(pairedMaBeeeName);
+            Serial.print("' (");
+            Serial.print(pairedMaBeeeName.length());
+            Serial.println(")");
           } break;
 
           case CMD_XIAO_SCAN_MABEEE:

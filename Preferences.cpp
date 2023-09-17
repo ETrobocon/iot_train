@@ -14,7 +14,8 @@
 
 String readFile(const char *filename){
     String result = "";
-    Serial.println(filename);
+    Serial.print("Reading ");
+    Serial.print(filename);
     FILE *file = fopen(filename, "r");
     if (file) {
         char buf[33];
@@ -23,9 +24,17 @@ String readFile(const char *filename){
         if (len > 0) {
             buf[len] = '\0';
             result = String(buf);
+            Serial.print(": '");
+            Serial.print(result);
+            Serial.print("' (");
+            Serial.print(len);
+            Serial.println(")");
         } else {
             remove(fileMaBeee);
+            Serial.println(" removed");
         }
+    } else {
+        Serial.println(" not found.");
     }
     return result;
 }
@@ -38,6 +47,13 @@ int writeFile(const char *filename, String data) {
         strcpy(buf, data.c_str());
         result = fwrite(buf, 1, sizeof(buf), file);
         fclose(file);
+        Serial.print("Writing ");
+        Serial.print(filename);
+        Serial.print(": '");
+        Serial.print(data);
+        Serial.print("' (");
+        Serial.print(result);
+        Serial.println(")");
     }
     return result;
 }
