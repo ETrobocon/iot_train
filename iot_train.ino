@@ -214,6 +214,7 @@ void doPeripheral() {
 }
 
 void doCentral() {
+#if 0
     static bool entry = true;
     static byte counter = 50;
     switch (stateCentral) {
@@ -355,6 +356,7 @@ void doCentral() {
         }
       } break;
     }
+#endif
 }
 
 void doNotify(){
@@ -488,8 +490,10 @@ void updateVer() {
 }
 
 void updateMaBeeeName() {
+#if 0
     String MaBeee = mabeee.localName();
     maNameCharacteristic.writeValue(MaBeee.c_str(), MaBeee.length());
+#endif
 }
 
 void setAccelPeriod(uint16_t period) {
@@ -583,6 +587,7 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
           } break;
           
           case CMD_XIAO_SET_MABEEE: {
+#if 0
             connectFirstMaBeee = false;
             if (setPairedMaBeeeName(String((char *)commandRequest.payload))) {
                 commandResponse.response = CMD_RESP_OK;
@@ -595,9 +600,13 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
                 Serial.println("Command: error: failed to write file.");
                 commandResponse.response = CMD_RESP_ERROR;
             }
+#else
+            commandResponse.response = CMD_RESP_EXECUTING;
+#endif
           }
 
           case CMD_XIAO_GET_MABEEE: {
+#if 0
             memcpy(commandResponse.payload, pairedMaBeeeName.c_str(), pairedMaBeeeName.length());
             commandResponse.response = CMD_RESP_OK;
             Serial.print("GET MABEEE: '");
@@ -605,6 +614,9 @@ void onCommandWritten(BLEDevice central, BLECharacteristic characteristic) {
             Serial.print("' (");
             Serial.print(pairedMaBeeeName.length());
             Serial.println(")");
+#else
+            commandResponse.response = CMD_RESP_EXECUTING;
+#endif
           } break;
 
           case CMD_XIAO_SCAN_MABEEE:
@@ -636,9 +648,11 @@ void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
 
 void onPwmWritten(BLEDevice central, BLECharacteristic characteristic) {
     Serial.println("Debug: onPwmWritten");
+#if 0
     pwmPacket pwm;
     bzero(pwm.byteArray, sizeof(pwm.byteArray));
     pwm.byteArray[0] = 0x01;
     pwm.byteArray[1] = characteristic.value()[0];
     mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
+#endif
 }
