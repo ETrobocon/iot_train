@@ -76,6 +76,9 @@ BLECharacteristic mabeeeNameCharacteristic;   // GATT: name characteristic
 BLECharacteristic mabeeeIdCharacteristic;     // GATT: ID characteristic
 BLECharacteristic mabeeeVersionCharacteristic;// GATT: version characteristic
 
+void mabeeeWait(unsigned long wait);
+
+    
 void setup() {
     // start serial port
     led.setColor(LED::WHITE);
@@ -341,7 +344,8 @@ void doCentral() {
                     voltRawValue_previous = voltRawValue;
                 }
             }
-            if (++voltCount > 100) {
+            if (++voltCount > 100) { 
+                mabeeeWait(150000);
                 mabeeeVoltCharacteristic.writeValue((uint8_t)0);
                 mabeee.poll();
                 voltCount = 0;
@@ -438,7 +442,8 @@ void loop() {
 
     // each loop runs about every 10ms
     elapsedTime = micros() - beginTime;
-    delayMicroseconds(10000 - (elapsedTime % 10000));
+    if(elapsedTime<10000)
+      delayMicroseconds(10000 - (elapsedTime % 10000));
 }
 
 void updateAccel() {
@@ -635,10 +640,25 @@ void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
 }
 
 void onPwmWritten(BLEDevice central, BLECharacteristic characteristic) {
+    static int prev_pwm=0;
     Serial.println("Debug: onPwmWritten");
     pwmPacket pwm;
     bzero(pwm.byteArray, sizeof(pwm.byteArray));
     pwm.byteArray[0] = 0x01;
     pwm.byteArray[1] = characteristic.value()[0];
-    mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
+    if (prev_pwm!=pwm.byteArray[1]) {
+      mabeeeWait(150000);
+      mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
+    }
+    prev_pwm = pwm.byteArray[1];
+
+}
+
+void mabeeeWait(unsigned long wait)
+{
+    static unsigned long mabeeeAccessTime = 0;
+    unsigned long elapsedTime = micros()-mabeeeAccessTime;
+    if(elapsedTime<wait)
+      delayMicroseconds(wait-elapsedTime);
+    mabeeeAccessTime=micros();
 }
