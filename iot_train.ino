@@ -77,7 +77,11 @@ BLECharacteristic mabeeeIdCharacteristic;     // GATT: ID characteristic
 BLECharacteristic mabeeeVersionCharacteristic;// GATT: version characteristic
 
 void mabeeeWait(unsigned long wait);
+void mabeeePwmWrite();
 
+static int pwm_value=0;
+static boolean set_pwm = false;
+static bool read_volt = false;
     
 void setup() {
     // start serial port
@@ -332,7 +336,9 @@ void doCentral() {
             static unsigned long voltageFetchTime=millis(); 
             mabeee.poll();
             if (mabeeeVoltCharacteristic.valueUpdated()) {
+                mabeeeWait(150000);
                 responseLength = mabeeeVoltCharacteristic.readValue(responseBuffer, sizeof(responseBuffer));
+
                 if (responseLength) {
                     voltRawValue = responseBuffer[0];
                     if (voltRawValue && voltRawValue != voltRawValue_previous) {
@@ -343,12 +349,14 @@ void doCentral() {
                     }
                     voltRawValue_previous = voltRawValue;
                 }
+                read_volt=false;
             }
             if (millis() > voltageFetchTime + 1000) { 
-                mabeeeWait(100000);
+                mabeeeWait(150000);
                 mabeeeVoltCharacteristic.writeValue((uint8_t)0);
                 mabeee.poll();
                 voltageFetchTime = millis();
+                read_volt=true;
             }
         } else {
             Serial.println("Central: Disconnected.");
@@ -439,7 +447,9 @@ void loop() {
     doCommand();
     doPeripheral();
     doCentral();
-
+    if(!read_volt && set_pwm)
+      mabeeePwmWrite();
+    
     // each loop runs about every 10ms
     elapsedTime = micros() - beginTime;
     if(elapsedTime<10000)
@@ -641,16 +651,23 @@ void onLedWritten(BLEDevice central, BLECharacteristic characteristic) {
 
 void onPwmWritten(BLEDevice central, BLECharacteristic characteristic) {
     static int prev_pwm=0;
-    Serial.println("Debug: onPwmWritten");
+    set_pwm = false;
+    pwm_value = characteristic.value()[0]; 
+    if (prev_pwm!=pwm_value) {
+        set_pwm = true;
+    }
+    prev_pwm = pwm_value;
+}
+
+void mabeeePwmWrite()
+{
     pwmPacket pwm;
     bzero(pwm.byteArray, sizeof(pwm.byteArray));
     pwm.byteArray[0] = 0x01;
-    pwm.byteArray[1] = characteristic.value()[0];
-    if (prev_pwm!=pwm.byteArray[1]) {
-      mabeeeWait(100000);
-      mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
-    }
-    prev_pwm = pwm.byteArray[1];
+    pwm.byteArray[1] = pwm_value;
+    mabeeeWait(150000);
+    mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
+    set_pwm = false;
 
 }
 
@@ -661,4 +678,5 @@ void mabeeeWait(unsigned long wait)
     if(elapsedTime<wait)
       delayMicroseconds(wait-elapsedTime);
     mabeeeAccessTime=micros();
+
 }
