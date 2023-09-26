@@ -329,7 +329,7 @@ void doCentral() {
             static uint8_t responseLength = 0;
             static uint8_t voltRawValue = 0;
             static uint8_t voltRawValue_previous = 0;
-            static uint16_t voltCount = 0;
+            static unsigned long voltageFetchTime=millis(); 
             mabeee.poll();
             if (mabeeeVoltCharacteristic.valueUpdated()) {
                 responseLength = mabeeeVoltCharacteristic.readValue(responseBuffer, sizeof(responseBuffer));
@@ -344,11 +344,11 @@ void doCentral() {
                     voltRawValue_previous = voltRawValue;
                 }
             }
-            if (++voltCount > 100) { 
-                mabeeeWait(150000);
+            if (millis() > voltageFetchTime + 1000) { 
+                mabeeeWait(100000);
                 mabeeeVoltCharacteristic.writeValue((uint8_t)0);
                 mabeee.poll();
-                voltCount = 0;
+                voltageFetchTime = millis();
             }
         } else {
             Serial.println("Central: Disconnected.");
@@ -647,7 +647,7 @@ void onPwmWritten(BLEDevice central, BLECharacteristic characteristic) {
     pwm.byteArray[0] = 0x01;
     pwm.byteArray[1] = characteristic.value()[0];
     if (prev_pwm!=pwm.byteArray[1]) {
-      mabeeeWait(150000);
+      mabeeeWait(100000);
       mabeeePwmCharacteristic.writeValue(pwm.byteArray, sizeof(pwm.byteArray));
     }
     prev_pwm = pwm.byteArray[1];
