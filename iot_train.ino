@@ -10,8 +10,8 @@
  *              See LICENSE.
  */
 
-#define VERSION_MAJOR 0
-#define VERSION_MINOR 3
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 0
 
 #include <math.h>
 #include "iot_train.h"   // IoT Train definitions
@@ -83,7 +83,11 @@ void setup() {
     while (!Serial && millis() < SERIAL_TIMEOUT);
     led.setColor(LED::BLACK);
     Serial.print("ETrobocon IoT Train controller on ");
-    Serial.println(BOARD_NAME);
+    Serial.print(BOARD_NAME);
+    Serial.print(", V");
+    Serial.print(VERSION_MAJOR);
+    Serial.print(".");
+    Serial.println(VERSION_MINOR);
 
     // start IMU
     if (imu.begin()) {
