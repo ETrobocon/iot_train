@@ -95,6 +95,7 @@ void setup() {
         Serial.println("IMU health: OK");
     }
 
+#if 0
     //start LittleFS
     LittleFS = new FileSystem_MBED();
     if (!LittleFS->init()) {
@@ -108,6 +109,9 @@ void setup() {
         led.setG();
         Serial.println("LittleFS health: OK");
     }
+#else
+    led.setG();
+#endif
 
     // start BLE Peripheral
     if (!BLE.begin()) {
